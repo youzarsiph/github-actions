@@ -1,0 +1,33 @@
+name: Format
+
+on:
+  push:
+    branches: [ "main" ]
+
+  pull_request:
+    branches: [ "main" ]
+
+  # schedule:
+  #   - cron: '44 3 * * 3'
+
+jobs:
+
+  format:
+    name: Run cargo fmt
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af #@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: rustfmt
+          override: true
+
+      - name: Run rustfmt
+        run: cargo fmt --all -- --check
+        continue-on-error: true
